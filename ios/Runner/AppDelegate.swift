@@ -1,6 +1,5 @@
 import UIKit
 import Flutter
-import AudioPlayer
 import AVFoundation
 
 
@@ -11,8 +10,7 @@ import AVFoundation
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-    let audioChanel = FlutterMethodChannel(name: "audio_player",
-                                              binaryMessenger: controller.binaryMessenger)
+    let audioChanel = FlutterMethodChannel(name: "audio_player", binaryMessenger: controller.binaryMessenger)
         batteryChannel.setMethodCallHandler({
       (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
       // This method is invoked on the UI thread.
