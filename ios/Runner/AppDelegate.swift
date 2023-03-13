@@ -23,7 +23,7 @@ import AVFoundation
         // }
         switch call.method {
         case "play":
-            let url = call.arguments("url")
+            let url = call.arguments("url") as String
             AudioPlayer.play(url)
             result(nil)
         case "pause":
