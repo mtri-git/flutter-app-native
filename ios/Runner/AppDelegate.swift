@@ -4,45 +4,46 @@ import AVFoundation
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
+  private let audioChannelName = "audio_player"
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    AudioHandler.register(with: self.flutterEngine!)
+    AudioHandler.register(withChannelName: audioChannelName)
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
 
 
-
 class AudioHandler: NSObject, FlutterPlugin {
-    var player: AVAudioPlayer?
+    private static var channel: FlutterMethodChannel?
+    private var player: AVAudioPlayer?
 
-    static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "audio_player", binaryMessenger: registrar.messenger())
+    static func register(withChannelName channelName: String) {
+        let registrar = FlutterPluginRegistrar(forPlugin: channelName)
+        channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
         let instance = AudioHandler()
-        registrar.addMethodCallDelegate(instance, channel: channel)
+        registrar.addMethodCallDelegate(instance, channel: channel!)
     }
 
     func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "play":
-                if let urlString = call.arguments as? String, let url = URL(string: urlString) {
-                    let session = AVAudioSession.sharedInstance()
-                    do {
-                        try session.setCategory(.playback, mode: .default, options: [])
-                        try session.setActive(true)
-                        let playerItem = AVPlayerItem(url: url)
-                        player = AVPlayer(playerItem: playerItem)
-                        player?.play()
-                        result("success")
-                    } catch {
-                        result("error")
-                    }
-                } else {
+            if let urlString = call.arguments as? String, let url = URL(string: urlString) {
+                let session = AVAudioSession.sharedInstance()
+                do {
+                    try session.setCategory(.playback, mode: .default, options: [])
+                    try session.setActive(true)
+                    player = try AVAudioPlayer(contentsOf: url)
+                    player?.play()
+                    result("success")
+                } catch {
                     result("error")
                 }
+            } else {
+                result("error")
+            }
         case "pause":
             player?.pause()
             result("success")
@@ -55,4 +56,3 @@ class AudioHandler: NSObject, FlutterPlugin {
         }
     }
 }
-
