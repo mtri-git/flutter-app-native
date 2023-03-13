@@ -1,7 +1,5 @@
 import UIKit
 import Flutter
-import AVFoundation
-
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,70 +7,51 @@ import AVFoundation
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-    let audioChanel = FlutterMethodChannel(name: "audio_player", binaryMessenger: controller.binaryMessenger)
-        audioChanel.setMethodCallHandler({
-      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
-      // This method is invoked on the UI thread.
-        audioChanel.setMethodCallHandler({
-        [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
-        // This method is invoked on the UI thread.
-        // guard call.method == "play" else {
-        //   result(FlutterMethodNotImplemented)
-        //   return
-        // }
-        switch call.method {
-        case "play":
-            let url = call.arguments("url") as String
-            AudioPlayer.play(url)
-            result(nil)
-        case "pause":
-          AudioPlayer.pause()
-            result(nil)
-
-        case "stop":
-          AudioPlayer.stop()
-          result(nil)
-
-        default:
-          result(FlutterMethodNotImplemented)
-          
-        }
-      })
-
-    })
-      
+    AudioHandler.register(with: self.flutterEngine!)
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
 
-class AudioPlayer: NSObject, AVAudioPlayerDelegate {
-    
-    var audioPlayer: AVAudioPlayer?
-    
-    func play(url: URL) {
-        stop()
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.delegate = self
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
-        } catch {
-            print("Error playing audio: \(error)")
+
+
+class AudioHandler: NSObject, FlutterPlugin {
+    var player: AVAudioPlayer?
+
+    static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "audio_player", binaryMessenger: registrar.messenger())
+        let instance = AudioHandler()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+
+    func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case "play":
+                if let urlString = call.arguments as? String, let url = URL(string: urlString) {
+                    let session = AVAudioSession.sharedInstance()
+                    do {
+                        try session.setCategory(.playback, mode: .default, options: [])
+                        try session.setActive(true)
+                        let playerItem = AVPlayerItem(url: url)
+                        player = AVPlayer(playerItem: playerItem)
+                        player?.play()
+                        result("success")
+                    } catch {
+                        result("error")
+                    }
+                } else {
+                    result("error")
+                }
+        case "pause":
+            player?.pause()
+            result("success")
+        case "stop":
+            player?.stop()
+            player = nil
+            result("success")
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
-    
-    func pause() {
-        audioPlayer?.pause()
-    }
-    
-    func stop() {
-        audioPlayer?.stop()
-        audioPlayer = nil
-    }
-    
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        stop()
-    }
 }
+
