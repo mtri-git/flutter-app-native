@@ -45,6 +45,7 @@ import AVFoundation
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+}
 
 class AudioPlayer: NSObject, AVAudioPlayerDelegate {
     
