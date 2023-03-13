@@ -2,12 +2,12 @@ import UIKit
 import Flutter
 import AVFoundation
 
+@UIApplicationMain
 class AppDelegate: FlutterAppDelegate {
-    override func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
-        AudioHandler.register(with: self)
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        let audioChannel = FlutterMethodChannel(name: "audio_player", binaryMessenger: controller.binaryMessenger)
+        AudioHandler.register(with: audioChannel)
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
