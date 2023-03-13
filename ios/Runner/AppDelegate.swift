@@ -11,7 +11,7 @@ import AVFoundation
   ) -> Bool {
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let audioChanel = FlutterMethodChannel(name: "audio_player", binaryMessenger: controller.binaryMessenger)
-        batteryChannel.setMethodCallHandler({
+        audioChanel.setMethodCallHandler({
       (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
       // This method is invoked on the UI thread.
         audioChanel.setMethodCallHandler({
@@ -25,14 +25,14 @@ import AVFoundation
         case "play":
             let url = call.arguments("url")
             AudioPlayer.play(url)
-            result(null)
+            result(nil)
         case "pause":
           AudioPlayer.pause()
-            result(null)
+            result(nil)
 
         case "stop":
           AudioPlayer.stop()
-          result(null)
+          result(nil)
 
         default:
           result(FlutterMethodNotImplemented)
