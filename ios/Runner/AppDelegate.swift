@@ -9,25 +9,24 @@ import AVFoundation
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    AudioHandler.register(withChannelName: audioChannelName)
+    AudioHandler.register(with: self.flutterEngine!, channelName: audioChannelName)
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
 
 
-class AudioHandler: NSObject, FlutterPlugin {
+@objc class AudioHandler: NSObject, FlutterPlugin {
     private static var channel: FlutterMethodChannel?
     private var player: AVAudioPlayer?
 
-    static func register(withChannelName channelName: String) {
-        let registrar = FlutterPluginRegistrar(forPlugin: channelName)
+    static func register(with registrar: FlutterPluginRegistrar, channelName: String) {
         channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
         let instance = AudioHandler()
         registrar.addMethodCallDelegate(instance, channel: channel!)
     }
 
-    func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    func handle(_ call: FlutterMethodCall, result: @escaping @escaping FlutterResult) {
         switch call.method {
         case "play":
             if let urlString = call.arguments as? String, let url = URL(string: urlString) {
