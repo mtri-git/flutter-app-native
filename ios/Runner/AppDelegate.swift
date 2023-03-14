@@ -30,7 +30,8 @@ import AVFoundation
                 do {
                     try session.setCategory(.playback, mode: .default, options: [])
                     try session.setActive(true)
-                    player = try AVAudioPlayer(contentsOf: URL(string: url))
+                    let _url = URL(string: url)
+                    player = try AVAudioPlayer(contentsOf: _url)
                     player?.play()
                     result("success")
                 } catch {
