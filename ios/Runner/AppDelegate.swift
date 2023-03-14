@@ -12,15 +12,14 @@ import AVFoundation
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let audioChannel = FlutterMethodChannel(name: "audio_player",
                                               binaryMessenger: controller.binaryMessenger)
-    let player = AVAudioPlayer()
+    let player : AVAudioPlayer()
     audioChannel.setMethodCallHandler({
       (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
       // This method is invoked on the UI thread.
       // Handle battery messages.
       switch call.method {
         case "play":
-        
-            let url
+            let url:String
              if let args = call.arguments as? Dictionary<String, Any>,
                 let urlString = args["url"] as? String{
                     url = urlString as? String
