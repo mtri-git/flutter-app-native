@@ -11,7 +11,9 @@ import AVFoundation
     
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let audioChannel = FlutterMethodChannel(name: "audio_player", binaryMessenger: controller.binaryMessenger)
-    let player : AVAudioPlayer
+    
+    var player : AVAudioPlayer!
+
     audioChannel.setMethodCallHandler({
       (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
       // This method is invoked on the UI thread.
