@@ -19,8 +19,9 @@ import AVFoundation
       // Handle battery messages.
       switch call.method {
         case "play":
+        
             let url = ""
-             if let args = call.arguments as? Dictionary<String, Any>
+             if let args = call.arguments as? Dictionary<String, Any>,
                 let urlString = args["url"] as? String
                 url = URL(string: urlString)
             print(url)
