@@ -34,6 +34,10 @@ class MainActivity : FlutterActivity() {
                         audioPlayer.pause()
                         result.success(null)
                     }
+                    "resume" -> {
+                        audioPlayer.resume()
+                        result.success(null)
+                    }
                     "stop" -> {
                         audioPlayer.stop()
                         result.success(null)

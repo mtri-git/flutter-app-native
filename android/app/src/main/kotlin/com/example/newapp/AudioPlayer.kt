@@ -2,14 +2,17 @@ package com.example.newapp
 
 import android.media.MediaPlayer
 import android.media.AudioAttributes
+import android.util.Log
 
 import kotlinx.coroutines.*
+
 
 class AudioPlayer {
 
     private val mediaPlayer = MediaPlayer()
     private var isPrepared = false
     private var isPlaying = false
+    private var length = 0
 
     fun play(url: String) {
         stop()
@@ -31,6 +34,17 @@ class AudioPlayer {
         if (isPlaying) {
             mediaPlayer.pause()
             isPlaying = false
+            length=mediaPlayer.getCurrentPosition()
+            Log.v("Tag", length.toString())
+        }
+    }
+
+    fun resume() {
+        Log.v("Tag", length.toString())
+        if (!isPlaying) {
+            mediaPlayer.seekTo(length)
+            mediaPlayer.start()
+            isPlaying = true
         }
     }
 

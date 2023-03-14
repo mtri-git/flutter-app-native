@@ -20,6 +20,14 @@ class AudioPlayer {
     }
   }
 
+  static Future<void> resume() async {
+    try {
+      await platform.invokeMethod('resume');
+    } on PlatformException catch (e) {
+      print("Failed to resume audio: '${e.message}'.");
+    }
+  }
+
   static Future<void> stop() async {
     try {
       await platform.invokeMethod('stop');
@@ -90,6 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 AudioPlayer.pause();
               },
               child: const Text("Pause"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                AudioPlayer.resume();
+              },
+              child: const Text("Resume"),
             ),
             ElevatedButton(
                 onPressed: () {
