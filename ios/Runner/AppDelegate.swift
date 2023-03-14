@@ -19,8 +19,9 @@ import AVFoundation
       // Handle battery messages.
       switch call.method {
         case "play":
-            let urlString = call.arguments()
+            let urlString = call.arguments("url")
             let url = URL(string: urlString)
+            print(url)
             if (url) {
                 let session = AVAudioSession.sharedInstance()
                 do {
@@ -37,6 +38,9 @@ import AVFoundation
             }
         case "pause":
             player?.pause()
+            result("success")
+        case "resume":
+            player?.play()
             result("success")
         case "stop":
             player?.stop()
