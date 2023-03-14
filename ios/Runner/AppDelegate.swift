@@ -23,7 +23,7 @@ import AVFoundation
                 let urlString = args["url"] as? String{
                     url = urlString
                 }
-            if (url) {
+            if (url != nil) {
                 let session = AVAudioSession.sharedInstance()
                 do {
                     try session.setCategory(.playback, mode: .default, options: [])
