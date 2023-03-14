@@ -22,8 +22,9 @@ import AVFoundation
         
             let url = ""
              if let args = call.arguments as? Dictionary<String, Any>,
-                let urlString = args["url"] as? String
-                url = URL(string: urlString)
+                let urlString = args["url"] as? String{
+                    url = URL(string: urlString)
+                }
             print(url)
             if (url) {
                 let session = AVAudioSession.sharedInstance()
