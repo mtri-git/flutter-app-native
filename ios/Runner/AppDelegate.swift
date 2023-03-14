@@ -20,25 +20,26 @@ import AVFoundation
       // Handle battery messages.
       switch call.method {
         case "play":
-            let url:URL
-             if let args = call.arguments as? Dictionary<String, Any>,
+            if let args = call.arguments as? Dictionary<String, Any>,
                 let urlString = args["url"] as? String{
-                    url = URL(string: urlString)
-                     
-                }
-            if (url != nil) {
-                let session = AVAudioSession.sharedInstance()
-                do {
-                    try session.setCategory(.playback, mode: .default, options: [])
-                    try session.setActive(true)
-                    player = try AVAudioPlayer(contentsOf: url)
+                print(urlString);
+                if let url = URL(string: urlString)
+                {
+                    let session = AVAudioSession.sharedInstance()
+                    do {
+                        try session.setCategory(.playback, mode: .default, options: [])
+                        try session.setActive(true)
+                        player = try AVAudioPlayer(contentsOf: url)
 
-                    player?.play()
-                    result("success")
-                } catch {
-                    result("error")
+                        player?.play()
+                        result("success")
+                    } catch {
+                        result("error")
+                    }
                 }
-            } else {
+            }
+
+            else {
                 result("error")
             }
         case "pause":
