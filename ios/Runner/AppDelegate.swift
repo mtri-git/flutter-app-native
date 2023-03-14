@@ -20,10 +20,10 @@ import AVFoundation
       switch call.method {
         case "play":
         
-            let url = ""
+            let url
              if let args = call.arguments as? Dictionary<String, Any>,
                 let urlString = args["url"] as? String{
-                    url = URL(string: urlString)
+                    url = urlString as? String
                 }
             print(url)
             if (url) {
