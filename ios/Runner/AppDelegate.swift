@@ -21,7 +21,7 @@ import AVFoundation
             let url:String
              if let args = call.arguments as? Dictionary<String, Any>,
                 let urlString = args["url"] as? String{
-                    url = urlString as? String
+                    url = urlString
                 }
             print(url)
             if (url) {
